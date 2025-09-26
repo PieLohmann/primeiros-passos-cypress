@@ -3,63 +3,27 @@ import userData from '../fixtures/userData'
 import LoginPage from '../pages/loginPage' 
 import DashboardPage from '../pages/dashboardPage'
 import menuPage from '../pages/menuPage'
+import myInfoPage from '../pages/myInfoPage'
 
+const Chance = require('chance')
+
+const chance = new Chance()
 const loginPage = new LoginPage()
 const dashboardPage = new DashboardPage ()
 const MenuPage = new menuPage()
+const MyInfoPage = new myInfoPage()
 
-describe('LoginOrange HRM Test', () => {
+describe('Orange HRM Test', () => {
 
-  const selectorsList = {
-  
-    
-  
-    firstNameField: "[name='firstName']",
-    midleNameField: "[name='middleName']",
-    lastNameField: "[name='lastName']",
-    genericFIeld: ".oxd-input-group",
-    dateField: "[placeholder='yyyy-mm-dd']",
-    dateCloseButton: ".--close",
-    submitButton: "[type='submit']",
-    genericComboBox: ".oxd-select-wrapper",
-    
-    
-  }
-
-
-  it.only('User Info Update - Success', () => {
+  it('User Info Update - Success', () => {
     loginPage.accessLoginPage()
     loginPage.loginWithUser(userData.userSuccess.username,userData.userSuccess.password)
+
     dashboardPage.checkDashboardPage()
     MenuPage.accessMyInfo()
-    
-  
-  //cy.get(selectorsList.firstNameField).clear().type('Roberto')
-  //cy.get(selectorsList.midleNameField).clear().type('Santos')
-  //cy.get(selectorsList.lastNameField).clear().type('Silva')
-  //cy.get(selectorsList.genericFIeld).eq(4).clear().type('EmployTest')
-  //cy.get(selectorsList.genericFIeld).eq(5).clear().type('OtherIdTest')
-  //cy.get(selectorsList.genericFIeld).eq(6).clear().type('DriversLiceTest123')
-  //cy.get(selectorsList.genericFIeld).eq(7).clear().type('2025-09-11')
-  //cy.get(selectorsList.dateCloseButton).click()
-  //cy.get(selectorsList.genericComboBox).eq(0).click() //nationality
-  //cy.get('.oxd-select-dropdown > :nth-child(6)').click()
-  //cy.get(selectorsList.genericComboBox).eq(1).click() //maritalStatus
-  //cy.get('.oxd-select-dropdown > :nth-child(2)').click()
-  //cy.get(selectorsList.submitButton).eq(0).click()
-  //cy.get('body').should('contain','Successfully Updated')
-  //cy.get('.oxd-toast-close')
-  //cy.get(selectorsList.genericComboBox).eq(2).click() //bloodType
-  //cy.get('.oxd-select-dropdown > :nth-child(6)').click()
-  //cy.get(selectorsList.genericFIeld).eq(15).type('TestTest')
-  
-
-  it('User Info Update - Fail', () => { 
-  cy.visit('/auth/login');
-  cy.get(selectorsList.usernameField).type(userData.userFail.username);
-  cy.get(selectorsList.passwordField).type(userData.userFail.password);
-  cy.get(selectorsList.loginButton).click();
-  cy.get(selectorsList.wrongCredentialAlert).should('contain', 'Invalid credentials');
-  })
+    MyInfoPage.fillPersonalDetails(chance.first(),chance.last(),chance.last())
+    MyInfoPage.fillEmployDetails('EmployId','OtherId','DriversLicence','2025-09-09','012345','98765')
+    MyInfoPage.fillStatus()
+    MyInfoPage.saveForm()
   })
 })
